@@ -5,29 +5,25 @@ import {
   getRandomArrayElements,
 } from '../lib/getRandom';
 import shuffle from '../lib/shuffle';
+import type {
+  QuizQuestion,
+  QuizStats,
+  QuizHookReturn,
+} from '../types/kanaQuiz';
 
-type QuizQuestion = {
-  question: KanaType;
-  answers: KanaType[];
+const initialQuizStats = {
+  tries: 0,
+  right: 0,
+  wrong: 0,
 };
 
-type QuizStats = {
-  tries: number;
-  right: number;
-  wrong: number;
-};
-
-export default function useQuizForm(kana: KanaType[]) {
+export default function useQuizForm(kana: KanaType[]): QuizHookReturn {
   const [quizKana, setQuizKana] = useState<KanaType[]>(kana);
+  const [quizStats, setQuizStats] = useState<QuizStats>(initialQuizStats);
+  const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [quizQuestion, setQuizQuestion] = useState<QuizQuestion>(
     createNewQuestion(quizKana, kana)
   );
-  const [quizStats, setQuizStats] = useState<QuizStats>({
-    tries: 0,
-    right: 0,
-    wrong: 0,
-  });
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
   function createNewQuestion(
     quizList: KanaType[],
@@ -69,16 +65,6 @@ export default function useQuizForm(kana: KanaType[]) {
     }
   }
 
-  function deleteElement(elementId: string, array: any[]) {
-    const index = array.findIndex(el => el.id === elementId);
-    const updatedQuizKana = [
-      ...array.slice(0, index),
-      ...array.slice(index + 1),
-    ];
-
-    return updatedQuizKana;
-  }
-
   function getNewQuestion() {
     const updatedQuizKana = deleteElement(quizQuestion.question.id, quizKana);
 
@@ -89,6 +75,15 @@ export default function useQuizForm(kana: KanaType[]) {
     setIsDisabled(true);
   }
 
+  function deleteElement(elementId: string, array: any[]) {
+    const index = array.findIndex(el => el.id === elementId);
+    const updatedQuizKana = [
+      ...array.slice(0, index),
+      ...array.slice(index + 1),
+    ];
+
+    return updatedQuizKana;
+  }
   return {
     quizKanaLength: quizKana.length,
     quizQuestion,
