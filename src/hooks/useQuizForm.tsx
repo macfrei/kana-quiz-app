@@ -6,7 +6,7 @@ import {
 } from '../lib/getRandom';
 import shuffle from '../lib/shuffle';
 
-type CurrentQuestion = {
+type QuizQuestion = {
   question: KanaType;
   answers: KanaType[];
 };
@@ -19,7 +19,7 @@ type QuizStats = {
 
 export default function useQuizForm(kana: KanaType[]) {
   const [quizKana, setQuizKana] = useState<KanaType[]>(kana);
-  const [currentQuestion, setCurrentQuestion] = useState<CurrentQuestion>(
+  const [quizQuestion, setQuizQuestion] = useState<QuizQuestion>(
     createNewQuestion(quizKana, kana)
   );
   const [quizStats, setQuizStats] = useState<QuizStats>({
@@ -32,23 +32,26 @@ export default function useQuizForm(kana: KanaType[]) {
   function createNewQuestion(
     quizList: KanaType[],
     originalList: KanaType[]
-  ): CurrentQuestion {
+  ): QuizQuestion {
     const question = getRandomArrayElement(quizList) as KanaType;
+
+    const updatedQuizKana = deleteElement(question.id, originalList);
+
     const answers = shuffle([
-      ...getRandomArrayElements(originalList, 3),
+      ...getRandomArrayElements(updatedQuizKana, 3),
       question,
     ]) as KanaType[];
 
-    const currentQuestion = {
+    const quizQuestion = {
       question,
       answers,
     };
 
-    return currentQuestion;
+    return quizQuestion;
   }
 
   function checkAnswer(answer: KanaType) {
-    if (answer.id !== currentQuestion.question.id) {
+    if (answer.id !== quizQuestion.question.id) {
       setQuizStats(quizStats => ({
         ...quizStats,
         tries: quizStats.tries + 1,
@@ -56,7 +59,7 @@ export default function useQuizForm(kana: KanaType[]) {
       }));
       setIsDisabled(true);
     }
-    if (answer.id === currentQuestion.question.id) {
+    if (answer.id === quizQuestion.question.id) {
       setQuizStats(quizStats => ({
         ...quizStats,
         tries: quizStats.tries + 1,
@@ -66,26 +69,32 @@ export default function useQuizForm(kana: KanaType[]) {
     }
   }
 
-  function getNewQuestion() {
-    const index = quizKana.findIndex(
-      el => el.id === currentQuestion.question.id
-    );
+  function deleteElement(elementId: string, array: any[]) {
+    const index = array.findIndex(el => el.id === elementId);
     const updatedQuizKana = [
-      ...quizKana.slice(0, index),
-      ...quizKana.slice(index + 1),
+      ...array.slice(0, index),
+      ...array.slice(index + 1),
     ];
+
+    return updatedQuizKana;
+  }
+
+  function getNewQuestion() {
+    const updatedQuizKana = deleteElement(quizQuestion.question.id, quizKana);
 
     const newQuestion = createNewQuestion(updatedQuizKana, kana);
 
     setQuizKana(updatedQuizKana);
-    setCurrentQuestion(newQuestion);
+    setQuizQuestion(newQuestion);
     setIsDisabled(true);
   }
 
   return {
-    currentQuestion,
+    quizKanaLength: quizKana.length,
+    quizQuestion,
+    isDisabled,
+    quizStats,
     checkAnswer,
     getNewQuestion,
-    isDisabled,
   };
 }
