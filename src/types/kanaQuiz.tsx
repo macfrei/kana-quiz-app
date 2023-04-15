@@ -9,6 +9,7 @@ type QuizStats = {
   tries: number;
   right: number;
   wrong: number;
+  isComplete: boolean;
 };
 
 type QuizHookReturn = {

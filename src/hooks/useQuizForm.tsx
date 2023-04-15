@@ -15,6 +15,7 @@ const initialQuizStats = {
   tries: 0,
   right: 0,
   wrong: 0,
+  isComplete: false,
 };
 
 export default function useQuizForm(kana: KanaType[]): QuizHookReturn {
