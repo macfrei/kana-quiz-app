@@ -3,12 +3,14 @@ import useQuizForm from '../hooks/useQuizForm';
 import React from 'react';
 import styled from 'styled-components';
 import Question from './Question';
+import { QuizStats } from '../types/kanaQuiz';
 
 type KanaQuizProps = {
   kana: KanaType[];
+  onResult: (quizStats: QuizStats) => void;
 };
 
-export default function KanaQuiz({ kana }: KanaQuizProps) {
+export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
   const {
     quizQuestion,
     quizStats,
@@ -20,7 +22,8 @@ export default function KanaQuiz({ kana }: KanaQuizProps) {
 
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
-    console.log(quizStats);
+
+    onResult({ ...quizStats, isComplete: true });
   }
 
   return (
@@ -58,7 +61,7 @@ const Form = styled.form`
   height: 100vh;
 `;
 
-const Headline = styled.h2`
+const Headline = styled.h1`
   display: grid;
   place-items: center;
   font-weight: normal;
