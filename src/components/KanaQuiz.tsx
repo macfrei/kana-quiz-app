@@ -32,7 +32,7 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
       <Question
         question={quizQuestion.question}
         answers={quizQuestion.answers}
-        onChange={checkAnswer}
+        onSelectAnswer={checkAnswer}
       />
       {quizKanaLength > 1 && (
         <Button

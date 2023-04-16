@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import InputWithLabel from './InputWithLabel';
 
 type KanaChoice = {
   katakana: boolean;
@@ -11,6 +12,9 @@ type KanaChoice = {
 type QuizChoiceProps = {
   onKanaChoice: (kanaChoice: string[]) => void;
 };
+
+const groupChoices = ['hiragana', 'katakana'];
+const typeChoices = ['basic', 'tenten', 'yoon'];
 
 export default function QuizChoice({ onKanaChoice }: QuizChoiceProps) {
   const [kanaChoice, setKanaChoice] = useState<KanaChoice>({
@@ -55,54 +59,33 @@ export default function QuizChoice({ onKanaChoice }: QuizChoiceProps) {
       <p id="kana-choice-description">Please choose at least one per group.</p>
       <fieldset>
         <legend>Hiragana or Katakana?</legend>
-        <label htmlFor="katakana">Katakana</label>
-        <input
-          id="katakana"
-          type="checkbox"
-          name="kana"
-          value="katakana"
-          onChange={handleChange}
-          checked={kanaChoice.katakana}
-        />
-        <label htmlFor="hiragana"> Hiragana</label>
-        <input
-          id="hiragana"
-          type="checkbox"
-          name="kana"
-          value="hiragana"
-          onChange={handleChange}
-          checked={kanaChoice.hiragana}
-        />
+        {groupChoices.map(group => (
+          <InputWithLabel
+            key={group}
+            labelText={group}
+            id={group}
+            type="checkbox"
+            name="kana"
+            value={group}
+            onChange={handleChange}
+            checked={kanaChoice[group as keyof KanaChoice]}
+          />
+        ))}
       </fieldset>
       <fieldset>
         <legend>And which types?</legend>
-        <label htmlFor="yoon">Yoon</label>
-        <input
-          id="yoon"
-          type="checkbox"
-          name="kana"
-          value="yoon"
-          onChange={handleChange}
-          checked={kanaChoice.yoon}
-        />
-        <label htmlFor="tenten"> Tenten</label>
-        <input
-          id="tenten"
-          type="checkbox"
-          name="kana"
-          value="tenten"
-          onChange={handleChange}
-          checked={kanaChoice.tenten}
-        />
-        <label htmlFor="basic"> Basic</label>
-        <input
-          id="basic"
-          type="checkbox"
-          name="kana"
-          value="basic"
-          onChange={handleChange}
-          checked={kanaChoice.basic}
-        />
+        {typeChoices.map(type => (
+          <InputWithLabel
+            key={type}
+            labelText={type}
+            id={type}
+            type="checkbox"
+            name="kana"
+            value={type}
+            onChange={handleChange}
+            checked={kanaChoice[type as keyof KanaChoice]}
+          />
+        ))}
       </fieldset>
       <button type="submit" disabled={!isDisabled}>
         Confirm choice
