@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import InputWithLabel from './InputWithLabel';
+import styled from 'styled-components';
 
 type KanaChoice = {
   katakana: boolean;
@@ -50,15 +51,17 @@ export default function QuizChoice({ onKanaChoice }: QuizChoiceProps) {
   const isDisabled = isKanaGroupSelected && isKanaTypeSelected;
 
   return (
-    <form
+    <Form
       aria-labelledby="kana-choice-headline"
       aria-describedby="kana-choice-description"
       onSubmit={handleSubmit}
     >
-      <h2 id="kana-choice-headline">Which Kana do you want to practice?</h2>
+      <Headline id="kana-choice-headline">
+        Which Kana do you want to practice?
+      </Headline>
       <p id="kana-choice-description">Please choose at least one per group.</p>
-      <fieldset>
-        <legend>Hiragana or Katakana?</legend>
+      <Fieldset>
+        <Legend>Hiragana or Katakana?</Legend>
         {groupChoices.map(group => (
           <InputWithLabel
             key={group}
@@ -71,9 +74,9 @@ export default function QuizChoice({ onKanaChoice }: QuizChoiceProps) {
             checked={kanaChoice[group as keyof KanaChoice]}
           />
         ))}
-      </fieldset>
-      <fieldset>
-        <legend>And which types?</legend>
+      </Fieldset>
+      <Fieldset>
+        <Legend>And which types?</Legend>
         {typeChoices.map(type => (
           <InputWithLabel
             key={type}
@@ -86,10 +89,60 @@ export default function QuizChoice({ onKanaChoice }: QuizChoiceProps) {
             checked={kanaChoice[type as keyof KanaChoice]}
           />
         ))}
-      </fieldset>
-      <button type="submit" disabled={!isDisabled}>
+      </Fieldset>
+      <Button type="submit" disabled={!isDisabled}>
         Confirm choice
-      </button>
-    </form>
+      </Button>
+    </Form>
   );
 }
+
+const Form = styled.form`
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  height: 100vh;
+
+  p {
+    font-style: italic;
+    font-size: 1rem;
+    margin: 0;
+    font-weight: normal;
+  }
+
+  label {
+    font-size: 1.5rem;
+  }
+`;
+
+const Headline = styled.h1`
+  margin: 0;
+  font-weight: normal;
+`;
+
+const Fieldset = styled.fieldset`
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  border: none;
+  margin: 0;
+  padding: 0;
+`;
+
+const Legend = styled.legend`
+  font-size: 1.5rem;
+  padding: 12px 0;
+`;
+
+const Button = styled.button`
+  background-color: transparent;
+  border-radius: 16px;
+  border: 1px solid;
+  padding: 0 12px;
+  width: 200px;
+  height: 50px;
+  font-size: 1.5rem;
+
+  place-self: center;
+`;
