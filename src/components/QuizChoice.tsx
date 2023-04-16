@@ -39,9 +39,20 @@ export default function QuizChoice({ onKanaChoice }: QuizChoiceProps) {
     onKanaChoice(selectedKana);
   }
 
+  const isKanaGroupSelected = kanaChoice.hiragana || kanaChoice.katakana;
+  const isKanaTypeSelected =
+    kanaChoice.basic || kanaChoice.yoon || kanaChoice.tenten;
+
+  const isDisabled = isKanaGroupSelected && isKanaTypeSelected;
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Which Kana do you want to practice?</h2>
+    <form
+      aria-labelledby="kana-choice-headline"
+      aria-describedby="kana-choice-description"
+      onSubmit={handleSubmit}
+    >
+      <h2 id="kana-choice-headline">Which Kana do you want to practice?</h2>
+      <p id="kana-choice-description">Please choose at least one per group.</p>
       <fieldset>
         <legend>Hiragana or Katakana?</legend>
         <label htmlFor="katakana">Katakana</label>
@@ -93,7 +104,9 @@ export default function QuizChoice({ onKanaChoice }: QuizChoiceProps) {
           checked={kanaChoice.basic}
         />
       </fieldset>
-      <button type="submit">Confirm choice</button>
+      <button type="submit" disabled={!isDisabled}>
+        Confirm choice
+      </button>
     </form>
   );
 }
