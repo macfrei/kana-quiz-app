@@ -3,8 +3,8 @@ import { KanaType } from '../types/kana';
 import {
   getRandomArrayElement,
   getRandomArrayElements,
-} from '../lib/getRandom';
-import shuffle from '../lib/shuffle';
+} from '../utils/getRandom';
+import shuffle from '../utils/shuffle';
 import type {
   QuizQuestion,
   QuizStats,
