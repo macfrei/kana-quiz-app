@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { KanaType } from '../types/kana';
+import { type Kana } from '../types/kana';
 import InputWithLabel from './InputWithLabel';
 
 type QuestionProps = {
-  question: KanaType;
-  answers: KanaType[];
-  onSelectAnswer: (answer: KanaType) => void;
+  question: Kana;
+  answers: Kana[];
+  onSelectAnswer: (answer: Kana) => void;
 };
 
 export default function Question({
@@ -13,7 +13,7 @@ export default function Question({
   answers,
   onSelectAnswer,
 }: QuestionProps) {
-  function handleChange(event: React.ChangeEvent, answer: KanaType) {
+  function handleChange(event: React.ChangeEvent, answer: Kana) {
     onSelectAnswer(answer);
   }
 

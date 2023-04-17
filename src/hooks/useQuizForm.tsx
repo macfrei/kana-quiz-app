@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { KanaType } from '../types/kana';
+import { Kana } from '../types/kana';
 import {
   getRandomArrayElement,
   getRandomArrayElements,
@@ -18,8 +18,8 @@ const initialQuizStats = {
   isComplete: false,
 };
 
-export default function useQuizForm(kana: KanaType[]): QuizHookReturn {
-  const [quizKana, setQuizKana] = useState<KanaType[]>(kana);
+export default function useQuizForm(kana: Kana[]): QuizHookReturn {
+  const [quizKana, setQuizKana] = useState<Kana[]>(kana);
   const [quizStats, setQuizStats] = useState<QuizStats>(initialQuizStats);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
   const [quizQuestion, setQuizQuestion] = useState<QuizQuestion>(
@@ -27,17 +27,17 @@ export default function useQuizForm(kana: KanaType[]): QuizHookReturn {
   );
 
   function createNewQuestion(
-    quizList: KanaType[],
-    originalList: KanaType[]
+    quizList: Kana[],
+    originalList: Kana[]
   ): QuizQuestion {
-    const question = getRandomArrayElement(quizList) as KanaType;
+    const question = getRandomArrayElement(quizList) as Kana;
 
     const updatedQuizKana = deleteElement(question.id, originalList);
 
     const answers = shuffle([
       ...getRandomArrayElements(updatedQuizKana, 3),
       question,
-    ]) as KanaType[];
+    ]) as Kana[];
 
     const quizQuestion = {
       question,
@@ -47,7 +47,7 @@ export default function useQuizForm(kana: KanaType[]): QuizHookReturn {
     return quizQuestion;
   }
 
-  function checkAnswer(answer: KanaType) {
+  function checkAnswer(answer: Kana) {
     if (answer.id !== quizQuestion.question.id) {
       setQuizStats(quizStats => ({
         ...quizStats,

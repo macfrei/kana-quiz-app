@@ -1,9 +1,6 @@
-import { KanaType } from '../types/kana';
+import { Kana } from '../types/kana';
 
-export default function filterKana(
-  kana: KanaType[],
-  kanaChoice: string[]
-): KanaType[] {
+export default function filterKana(kana: Kana[], kanaChoice: string[]): Kana[] {
   const filteredKanaGroup = kana.filter(el => {
     if (kanaChoice.includes('katakana') && kanaChoice.includes('hiragana')) {
       return el;

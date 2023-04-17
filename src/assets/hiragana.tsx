@@ -1,6 +1,6 @@
-import { type KanaType, TypeOfKana } from '../types/kana';
+import { type Kana, TypeOfKana } from '../types/kana';
 
-const hiragana: KanaType[] = [
+const hiragana: Kana[] = [
   {
     id: 'h_a',
     pronunciation: 'A',

@@ -5,7 +5,7 @@ import { QuizStats } from './types/kanaQuiz';
 import QuizChoice from './components/QuizChoice';
 import katakana from './assets/katakana';
 import filterKana from './utils/filterKana';
-import { KanaType } from './types/kana';
+import { Kana } from './types/kana';
 
 const initialResult = {
   tries: 0,
@@ -16,7 +16,7 @@ const initialResult = {
 
 function App() {
   const [result, setResult] = useState<QuizStats>(initialResult);
-  const [kana, setKana] = useState<KanaType[]>([]);
+  const [kana, setKana] = useState<Kana[]>([]);
 
   function handleResult(quizStats: QuizStats) {
     setResult(quizStats);

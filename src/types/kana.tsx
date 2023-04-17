@@ -4,7 +4,7 @@ enum TypeOfKana {
   yoon = 'yoon',
 }
 
-type KanaType = {
+type Kana = {
   id: string;
   pronunciation: string;
   kana: string;
@@ -13,4 +13,4 @@ type KanaType = {
 };
 
 export { TypeOfKana };
-export type { KanaType };
+export type { Kana };
