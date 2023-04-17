@@ -22,7 +22,7 @@ function App() {
     setResult(quizStats);
   }
 
-  function chooseKana(kanaChoice: any) {
+  function chooseKana(kanaChoice: string[]) {
     const kanas = [...hiragana, ...katakana];
     const filteredKana = filterKana(kanas, kanaChoice);
     setKana(filteredKana);
