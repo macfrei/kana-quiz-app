@@ -1,8 +1,8 @@
-import { type KanaType } from './kana';
+import { type Kana } from './kana';
 
 type QuizQuestion = {
-  question: KanaType;
-  answers: KanaType[];
+  question: Kana;
+  answers: Kana[];
 };
 
 type QuizStats = {
@@ -17,7 +17,7 @@ type QuizHookReturn = {
   quizStats: QuizStats;
   quizKanaLength: number;
   isDisabled: boolean;
-  checkAnswer: (answer: KanaType) => void;
+  checkAnswer: (answer: Kana) => void;
   getNewQuestion: () => void;
 };
 

@@ -1,4 +1,4 @@
-import { type KanaType } from '../types/kana';
+import { type Kana } from '../types/kana';
 import useQuizForm from '../hooks/useQuizForm';
 import React from 'react';
 import styled from 'styled-components';
@@ -6,7 +6,7 @@ import Question from './Question';
 import { QuizStats } from '../types/kanaQuiz';
 
 type KanaQuizProps = {
-  kana: KanaType[];
+  kana: Kana[];
   onResult: (quizStats: QuizStats) => void;
 };
 
@@ -32,7 +32,7 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
       <Question
         question={quizQuestion.question}
         answers={quizQuestion.answers}
-        onChange={checkAnswer}
+        onSelectAnswer={checkAnswer}
       />
       {quizKanaLength > 1 && (
         <Button
