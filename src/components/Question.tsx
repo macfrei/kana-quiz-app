@@ -13,10 +13,6 @@ export default function Question({
   answers,
   onSelectAnswer,
 }: QuestionProps) {
-  function handleChange(event: React.ChangeEvent, answer: Kana) {
-    onSelectAnswer(answer);
-  }
-
   return (
     <Fieldset>
       <Legend>{question.kana}</Legend>
@@ -28,7 +24,7 @@ export default function Question({
           type="radio"
           name={question.kana}
           value={answer.kana}
-          onChange={event => handleChange(event, answer)}
+          onChange={() => onSelectAnswer(answer)}
         />
       ))}
     </Fieldset>
