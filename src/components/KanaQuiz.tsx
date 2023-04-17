@@ -10,12 +10,17 @@ type KanaQuizProps = {
   onResult: (quizStats: QuizStats) => void;
 };
 
+type FeedbackProps = {
+  isRight: boolean;
+};
+
 export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
   const {
     quizQuestion,
     quizStats,
     quizKanaLength,
     isDisabled,
+    feedback,
     checkAnswer,
     getNewQuestion,
   } = useQuizForm(kana);
@@ -34,6 +39,12 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
         answers={quizQuestion.answers}
         onSelectAnswer={checkAnswer}
       />
+
+      {feedback.length > 0 ? (
+        <Feedback isRight={!isDisabled}>{feedback}</Feedback>
+      ) : (
+        <p>Please select one answer!</p>
+      )}
       {quizKanaLength > 1 && (
         <Button
           type="button"
@@ -54,11 +65,19 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
 
 const Form = styled.form`
   display: grid;
-  grid-template-rows: 80px auto 80px;
+  grid-template-rows: 80px auto 10px 80px;
   gap: 24px;
 
   padding: 12px;
   height: 100vh;
+
+  p {
+    font-style: italic;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    place-items: center;
+  }
 `;
 
 const Headline = styled.h1`
@@ -67,6 +86,10 @@ const Headline = styled.h1`
   font-weight: normal;
   margin: 0;
   padding: 0;
+`;
+
+const Feedback = styled.p<FeedbackProps>`
+  color: ${props => (props.isRight ? 'green' : 'red')};
 `;
 
 const Button = styled.button`
