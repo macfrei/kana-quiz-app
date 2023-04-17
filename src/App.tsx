@@ -6,6 +6,8 @@ import QuizChoice from './components/QuizChoice';
 import katakana from './assets/katakana';
 import filterKana from './utils/filterKana';
 import { Kana } from './types/kana';
+import Result from './components/Result';
+import styled from 'styled-components';
 
 const initialResult = {
   tries: 0,
@@ -29,30 +31,28 @@ function App() {
   }
 
   return (
-    <div>
+    <AppContainer>
       {kana.length === 0 && <QuizChoice onKanaChoice={chooseKana} />}
       {kana.length > 0 && !result.isComplete && (
         <KanaQuiz kana={kana} onResult={handleResult} />
       )}
       {result.isComplete && (
-        <>
-          <h1>Kana Quiz Result</h1>
-          <ul>
-            <li>Tries: {result.tries}</li>
-            <li>Wrong: {result.wrong}</li>
-          </ul>
-          <button
-            onClick={() => {
-              setResult(initialResult);
-              setKana([]);
-            }}
-          >
-            Try again
-          </button>
-        </>
+        <Result
+          result={result}
+          onReset={() => {
+            setKana([]);
+            setResult(initialResult);
+          }}
+        />
       )}
-    </div>
+    </AppContainer>
   );
 }
 
 export default App;
+
+const AppContainer = styled.div`
+  max-width: 600px;
+  max-height: 800px;
+  margin: 0 auto;
+`;
