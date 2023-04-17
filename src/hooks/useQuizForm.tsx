@@ -22,6 +22,7 @@ export default function useQuizForm(kana: Kana[]): QuizHookReturn {
   const [quizKana, setQuizKana] = useState<Kana[]>(kana);
   const [quizStats, setQuizStats] = useState<QuizStats>(initialQuizStats);
   const [isDisabled, setIsDisabled] = useState<boolean>(true);
+  const [feedback, setFeedback] = useState<string>('');
   const [quizQuestion, setQuizQuestion] = useState<QuizQuestion>(
     createNewQuestion(quizKana, kana)
   );
@@ -55,7 +56,9 @@ export default function useQuizForm(kana: Kana[]): QuizHookReturn {
         wrong: quizStats.wrong + 1,
       }));
       setIsDisabled(true);
+      setFeedback('Upps, you got it wrong, please try again!');
     }
+
     if (answer.id === quizQuestion.question.id) {
       setQuizStats(quizStats => ({
         ...quizStats,
@@ -63,6 +66,7 @@ export default function useQuizForm(kana: Kana[]): QuizHookReturn {
         right: quizStats.right + 1,
       }));
       setIsDisabled(false);
+      setFeedback('Well done!');
     }
   }
 
@@ -74,6 +78,7 @@ export default function useQuizForm(kana: Kana[]): QuizHookReturn {
     setQuizKana(updatedQuizKana);
     setQuizQuestion(newQuestion);
     setIsDisabled(true);
+    setFeedback('');
   }
 
   function deleteElement(elementId: string, array: any[]) {
@@ -89,6 +94,7 @@ export default function useQuizForm(kana: Kana[]): QuizHookReturn {
     quizKanaLength: quizKana.length,
     quizQuestion,
     isDisabled,
+    feedback,
     quizStats,
     checkAnswer,
     getNewQuestion,

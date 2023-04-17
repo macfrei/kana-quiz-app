@@ -17,6 +17,7 @@ type QuizHookReturn = {
   quizStats: QuizStats;
   quizKanaLength: number;
   isDisabled: boolean;
+  feedback: string;
   checkAnswer: (answer: Kana) => void;
   getNewQuestion: () => void;
 };
