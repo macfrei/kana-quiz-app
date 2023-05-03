@@ -1,102 +1,88 @@
 import { useState } from 'react';
 import { Kana } from '../types/kana';
-import {
-  getRandomArrayElement,
-  getRandomArrayElements,
-} from '../utils/getRandom';
-import shuffle from '../utils/shuffle';
-import type {
-  QuizQuestion,
-  QuizStats,
-  QuizHookReturn,
-} from '../types/kanaQuiz';
 
-const initialQuizStats = {
-  tries: 0,
-  right: 0,
-  wrong: 0,
-  isComplete: false,
+type QuizStats = {
+  kana: Kana;
+  wrongAnswers: Kana[];
+  rightAnswers: Kana[];
+  isRight: boolean;
 };
 
-export default function useQuizForm(kana: Kana[]): QuizHookReturn {
-  const [quizKana, setQuizKana] = useState<Kana[]>(kana);
-  const [quizStats, setQuizStats] = useState<QuizStats>(initialQuizStats);
-  const [isDisabled, setIsDisabled] = useState<boolean>(true);
-  const [feedback, setFeedback] = useState<string>('');
-  const [quizQuestion, setQuizQuestion] = useState<QuizQuestion>(
-    createNewQuestion(quizKana, kana)
-  );
+type QuizQuestion = {
+  question: Kana;
+  answers: Kana[];
+};
 
-  function createNewQuestion(
-    quizList: Kana[],
-    originalList: Kana[]
-  ): QuizQuestion {
-    const question = getRandomArrayElement(quizList) as Kana;
+export default function useQuizForm(kana: QuizQuestion[]) {
+  const [quizStats, setQuizStats] = useState<QuizStats[]>([]);
+  const [step, setStep] = useState(0);
 
-    const updatedQuizKana = deleteElement(question.id, originalList);
+  const totalSteps = kana.length - 1;
+  const quizQuestion = kana[step];
 
-    const answers = shuffle([
-      ...getRandomArrayElements(updatedQuizKana, 3),
-      question,
-    ]) as Kana[];
+  const start = quizStats.find(
+    el => el.kana.id === quizQuestion.question.id
+  )?.isRight;
+  const answerIsRight =
+    !quizStats.find(el => el.kana.id === quizQuestion.question.id)?.isRight ??
+    false;
 
-    const quizQuestion = {
-      question,
-      answers,
-    };
-
-    return quizQuestion;
-  }
+  const isDisabled =
+    quizStats.find(el => el.kana.id === quizQuestion.question.id)?.isRight ??
+    true;
 
   function checkAnswer(answer: Kana) {
-    if (answer.id !== quizQuestion.question.id) {
-      setQuizStats(quizStats => ({
+    const index = quizStats.findIndex(
+      el => el.kana.id === quizQuestion.question.id
+    );
+
+    const isRight = answer.id === quizQuestion.question.id;
+    const key = isRight ? 'rightAnswers' : 'wrongAnswers';
+
+    if (index < 0) {
+      setQuizStats([
+        {
+          kana: quizQuestion.question,
+          wrongAnswers: isRight ? [] : [answer],
+          rightAnswers: isRight ? [answer] : [],
+          isRight: !isRight,
+        },
         ...quizStats,
-        tries: quizStats.tries + 1,
-        wrong: quizStats.wrong + 1,
-      }));
-      setIsDisabled(true);
-      setFeedback('Upps, you got it wrong, please try again!');
+      ]);
     }
 
-    if (answer.id === quizQuestion.question.id) {
-      setQuizStats(quizStats => ({
-        ...quizStats,
-        tries: quizStats.tries + 1,
-        right: quizStats.right + 1,
-      }));
-      setIsDisabled(false);
-      setFeedback('Well done!');
+    if (index >= 0) {
+      const currentKanaStats = quizStats[index];
+
+      const updatedQuizStats = [
+        ...quizStats.slice(0, index),
+        {
+          ...currentKanaStats,
+          isRight: !isRight,
+          [`${key}`]: [
+            ...(currentKanaStats[key as keyof QuizStats] as Kana[]),
+            answer,
+          ],
+        },
+        ...quizStats.slice(index + 1),
+      ];
+
+      setQuizStats(updatedQuizStats);
     }
   }
 
-  function getNewQuestion() {
-    const updatedQuizKana = deleteElement(quizQuestion.question.id, quizKana);
-
-    const newQuestion = createNewQuestion(updatedQuizKana, kana);
-
-    setQuizKana(updatedQuizKana);
-    setQuizQuestion(newQuestion);
-    setIsDisabled(true);
-    setFeedback('');
+  function advanceStep() {
+    setStep(step => step + 1);
   }
 
-  function deleteElement(elementId: string, array: any[]) {
-    const index = array.findIndex(el => el.id === elementId);
-    const updatedQuizKana = [
-      ...array.slice(0, index),
-      ...array.slice(index + 1),
-    ];
-
-    return updatedQuizKana;
-  }
   return {
-    quizKanaLength: quizKana.length,
+    step,
+    totalSteps,
+    start,
     quizQuestion,
     isDisabled,
-    feedback,
-    quizStats,
+    answerIsRight,
     checkAnswer,
-    getNewQuestion,
+    advanceStep,
   };
 }

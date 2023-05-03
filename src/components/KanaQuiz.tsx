@@ -1,6 +1,6 @@
 import { type Kana } from '../types/kana';
 import useQuizForm from '../hooks/useQuizForm';
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Question from './Question';
 
@@ -11,7 +11,7 @@ type QuizQuestion = {
 
 type KanaQuizProps = {
   kana: QuizQuestion[];
-  onResult: (quizStats: QuizStats) => void;
+  onResult: (quizStats: QuizStats[]) => void;
 };
 
 type FeedbackProps = {
@@ -26,67 +26,21 @@ type QuizStats = {
 };
 
 export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
-  const [quizStats, setQuizStats] = useState<QuizStats[]>([]);
-  const [step, setStep] = useState(0);
-
-  const totalSteps = kana.length - 1;
-  const quizQuestion = kana[step];
-
-  const start = quizStats.find(
-    el => el.kana.id === quizQuestion.question.id
-  )?.isRight;
-  const answerIsRight =
-    !quizStats.find(el => el.kana.id === quizQuestion.question.id)?.isRight ??
-    false;
-
-  const isDisabled =
-    quizStats.find(el => el.kana.id === quizQuestion.question.id)?.isRight ??
-    true;
+  const {
+    step,
+    totalSteps,
+    start,
+    quizQuestion,
+    isDisabled,
+    answerIsRight,
+    checkAnswer,
+    advanceStep,
+  } = useQuizForm(kana);
 
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
 
     //onResult({ ...quizStats, isComplete: true });
-  }
-
-  function checkAnswer(answer: Kana) {
-    const index = quizStats.findIndex(
-      el => el.kana.id === quizQuestion.question.id
-    );
-
-    const isRight = answer.id === quizQuestion.question.id;
-    const key = isRight ? 'rightAnswers' : 'wrongAnswers';
-
-    if (index < 0) {
-      setQuizStats([
-        {
-          kana: quizQuestion.question,
-          wrongAnswers: isRight ? [] : [answer],
-          rightAnswers: isRight ? [answer] : [],
-          isRight: !isRight,
-        },
-        ...quizStats,
-      ]);
-    }
-
-    if (index >= 0) {
-      const currentKanaStats = quizStats[index];
-
-      const updatedQuizStats = [
-        ...quizStats.slice(0, index),
-        {
-          ...currentKanaStats,
-          isRight: !isRight,
-          [`${key}`]: [
-            ...(currentKanaStats[key as keyof QuizStats] as Kana[]),
-            answer,
-          ],
-        },
-        ...quizStats.slice(index + 1),
-      ];
-
-      setQuizStats(updatedQuizStats);
-    }
   }
 
   return (
@@ -107,11 +61,7 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
         <Feedback isRight={answerIsRight}>Please try again!</Feedback>
       )}
       {step !== totalSteps && (
-        <Button
-          type="button"
-          onClick={() => setStep(step => step + 1)}
-          disabled={isDisabled}
-        >
+        <Button type="button" onClick={advanceStep} disabled={isDisabled}>
           Next
         </Button>
       )}
