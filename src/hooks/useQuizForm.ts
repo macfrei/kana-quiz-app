@@ -78,6 +78,7 @@ export default function useQuizForm(kana: QuizQuestion[]) {
   return {
     step,
     totalSteps,
+    quizStats,
     start,
     quizQuestion,
     isDisabled,

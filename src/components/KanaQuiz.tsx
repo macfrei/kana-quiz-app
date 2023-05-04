@@ -29,6 +29,7 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
   const {
     step,
     totalSteps,
+    quizStats,
     start,
     quizQuestion,
     isDisabled,
@@ -40,7 +41,7 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
 
-    //onResult({ ...quizStats, isComplete: true });
+    onResult(quizStats);
   }
 
   return (
