@@ -1,13 +1,12 @@
-import { type Kana } from '../types/kana';
 import useQuizForm from '../hooks/useQuizForm';
 import React from 'react';
 import styled from 'styled-components';
 import Question from './Question';
-import { QuizStats } from '../types/kanaQuiz';
+import { QuizQuestion, QuizStats } from '../types/kanaQuiz';
 
 type KanaQuizProps = {
-  kana: Kana[];
-  onResult: (quizStats: QuizStats) => void;
+  kana: QuizQuestion[];
+  onResult: (quizStats: QuizStats[]) => void;
 };
 
 type FeedbackProps = {
@@ -16,19 +15,21 @@ type FeedbackProps = {
 
 export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
   const {
-    quizQuestion,
+    step,
+    totalSteps,
     quizStats,
-    quizKanaLength,
+    start,
+    quizQuestion,
     isDisabled,
-    feedback,
+    answerIsRight,
     checkAnswer,
-    getNewQuestion,
+    advanceStep,
   } = useQuizForm(kana);
 
   function handleSubmit(event: React.SyntheticEvent) {
     event.preventDefault();
 
-    onResult({ ...quizStats, isComplete: true });
+    onResult(quizStats);
   }
 
   return (
@@ -39,22 +40,21 @@ export default function KanaQuiz({ kana, onResult }: KanaQuizProps) {
         answers={quizQuestion.answers}
         onSelectAnswer={checkAnswer}
       />
-
-      {feedback.length > 0 ? (
-        <Feedback isRight={!isDisabled}>{feedback}</Feedback>
-      ) : (
-        <p>Please select one answer!</p>
+      {start === undefined && <p>Please select an answer.</p>}
+      {start !== undefined && answerIsRight && (
+        <Feedback isRight={answerIsRight}>
+          Well done, this is the correct answer!
+        </Feedback>
       )}
-      {quizKanaLength > 1 && (
-        <Button
-          type="button"
-          onClick={() => getNewQuestion()}
-          disabled={isDisabled}
-        >
+      {!answerIsRight && (
+        <Feedback isRight={answerIsRight}>Please try again!</Feedback>
+      )}
+      {step !== totalSteps && (
+        <Button type="button" onClick={advanceStep} disabled={isDisabled}>
           Next
         </Button>
       )}
-      {quizKanaLength === 1 && (
+      {step === totalSteps && (
         <Button type="submit" disabled={isDisabled}>
           Result
         </Button>
