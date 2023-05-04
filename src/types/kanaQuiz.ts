@@ -6,20 +6,22 @@ type QuizQuestion = {
 };
 
 type QuizStats = {
-  tries: number;
-  right: number;
-  wrong: number;
-  isComplete: boolean;
+  kana: Kana;
+  wrongAnswers: Kana[];
+  rightAnswers: Kana[];
+  isRight: boolean;
 };
 
 type QuizHookReturn = {
+  step: number;
+  totalSteps: number;
+  quizStats: QuizStats[];
+  start: boolean | undefined;
   quizQuestion: QuizQuestion;
-  quizStats: QuizStats;
-  quizKanaLength: number;
   isDisabled: boolean;
-  feedback: string;
+  answerIsRight: boolean;
   checkAnswer: (answer: Kana) => void;
-  getNewQuestion: () => void;
+  advanceStep: () => void;
 };
 
 export type { QuizQuestion, QuizStats, QuizHookReturn };

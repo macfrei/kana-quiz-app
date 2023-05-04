@@ -1,13 +1,8 @@
-import { type Kana } from '../types/kana';
 import useQuizForm from '../hooks/useQuizForm';
 import React from 'react';
 import styled from 'styled-components';
 import Question from './Question';
-
-type QuizQuestion = {
-  question: Kana;
-  answers: Kana[];
-};
+import { QuizQuestion, QuizStats } from '../types/kanaQuiz';
 
 type KanaQuizProps = {
   kana: QuizQuestion[];
@@ -15,13 +10,6 @@ type KanaQuizProps = {
 };
 
 type FeedbackProps = {
-  isRight: boolean;
-};
-
-type QuizStats = {
-  kana: Kana;
-  wrongAnswers: Kana[];
-  rightAnswers: Kana[];
   isRight: boolean;
 };
 

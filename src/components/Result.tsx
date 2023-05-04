@@ -1,12 +1,5 @@
 import styled from 'styled-components';
-import { Kana } from '../types/kana';
-
-type QuizStats = {
-  kana: Kana;
-  wrongAnswers: Kana[];
-  rightAnswers: Kana[];
-  isRight: boolean;
-};
+import { QuizStats } from '../types/kanaQuiz';
 
 type ResultProps = {
   result: QuizStats[];

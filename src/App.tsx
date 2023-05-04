@@ -9,18 +9,7 @@ import Result from './components/Result';
 import styled from 'styled-components';
 import shuffle from './utils/shuffle';
 import { getRandomArrayElements } from './utils/getRandom';
-
-type QuizStats = {
-  kana: Kana;
-  wrongAnswers: Kana[];
-  rightAnswers: Kana[];
-  isRight: boolean;
-};
-
-type QuizQuestion = {
-  question: Kana;
-  answers: Kana[];
-};
+import { QuizQuestion, QuizStats } from './types/kanaQuiz';
 
 function App() {
   const [result, setResult] = useState<QuizStats[]>([]);

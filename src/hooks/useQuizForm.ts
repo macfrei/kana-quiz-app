@@ -1,19 +1,8 @@
 import { useState } from 'react';
 import { Kana } from '../types/kana';
+import { QuizHookReturn, QuizQuestion, QuizStats } from '../types/kanaQuiz';
 
-type QuizStats = {
-  kana: Kana;
-  wrongAnswers: Kana[];
-  rightAnswers: Kana[];
-  isRight: boolean;
-};
-
-type QuizQuestion = {
-  question: Kana;
-  answers: Kana[];
-};
-
-export default function useQuizForm(kana: QuizQuestion[]) {
+export default function useQuizForm(kana: QuizQuestion[]): QuizHookReturn {
   const [quizStats, setQuizStats] = useState<QuizStats[]>([]);
   const [step, setStep] = useState(0);
 
